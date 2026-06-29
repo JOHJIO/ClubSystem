@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.club.mapper.FinanceRecordMapper">
+    <resultMap id="BaseResultMap" type="FinanceRecord">
+        <id column="id" property="id"/>
+        <result column="club_id" property="clubId"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="item" property="item"/>
+        <result column="handler" property="handler"/>
+        <result column="record_time" property="recordTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT id, club_id, type, amount, item, handler, record_time, remark FROM finance_record
+        <where>
+            <if test="keyword != null and keyword != ''">
+                item LIKE CONCAT('%', #{keyword}, '%') OR handler LIKE CONCAT('%', #{keyword}, '%') OR remark LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT id, club_id, type, amount, item, handler, record_time, remark FROM finance_record WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO finance_record (club_id, type, amount, item, handler, record_time, remark)
+        VALUES (#{clubId}, #{type}, #{amount}, #{item}, #{handler}, #{recordTime}, #{remark})
+    </insert>
+
+    <update id="update">
+        UPDATE finance_record
+        <set>
+            club_id = #{clubId},
+            type = #{type},
+            amount = #{amount},
+            item = #{item},
+            handler = #{handler},
+            record_time = #{recordTime},
+            remark = #{remark},
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM finance_record WHERE id = #{id}
+    </delete>
+</mapper>

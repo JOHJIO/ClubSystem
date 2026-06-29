@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.club.mapper.VenueBookingMapper">
+    <resultMap id="BaseResultMap" type="VenueBooking">
+        <id column="id" property="id"/>
+        <result column="venue_id" property="venueId"/>
+        <result column="club_id" property="clubId"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT id, venue_id, club_id, activity_id, start_time, end_time, status, remark, create_time FROM venue_booking
+        <where>
+            <if test="keyword != null and keyword != ''">
+                remark LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT id, venue_id, club_id, activity_id, start_time, end_time, status, remark, create_time FROM venue_booking WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO venue_booking (venue_id, club_id, activity_id, start_time, end_time, status, remark)
+        VALUES (#{venueId}, #{clubId}, #{activityId}, #{startTime}, #{endTime}, #{status}, #{remark})
+    </insert>
+
+    <update id="update">
+        UPDATE venue_booking
+        <set>
+            venue_id = #{venueId},
+            club_id = #{clubId},
+            activity_id = #{activityId},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            status = #{status},
+            remark = #{remark},
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM venue_booking WHERE id = #{id}
+    </delete>
+</mapper>

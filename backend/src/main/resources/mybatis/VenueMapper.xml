@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.club.mapper.VenueMapper">
+    <resultMap id="BaseResultMap" type="Venue">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="location" property="location"/>
+        <result column="capacity" property="capacity"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT id, name, location, capacity, status, remark FROM venue
+        <where>
+            <if test="keyword != null and keyword != ''">
+                name LIKE CONCAT('%', #{keyword}, '%') OR location LIKE CONCAT('%', #{keyword}, '%') OR remark LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT id, name, location, capacity, status, remark FROM venue WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO venue (name, location, capacity, status, remark)
+        VALUES (#{name}, #{location}, #{capacity}, #{status}, #{remark})
+    </insert>
+
+    <update id="update">
+        UPDATE venue
+        <set>
+            name = #{name},
+            location = #{location},
+            capacity = #{capacity},
+            status = #{status},
+            remark = #{remark},
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM venue WHERE id = #{id}
+    </delete>
+</mapper>

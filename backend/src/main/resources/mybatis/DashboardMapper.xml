@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.club.mapper.DashboardMapper">
+    <resultMap id="ActivityResultMap" type="Activity">
+        <id column="id" property="id"/>
+        <result column="club_id" property="clubId"/>
+        <result column="title" property="title"/>
+        <result column="location" property="location"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="capacity" property="capacity"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="countClubs" resultType="int">SELECT COUNT(*) FROM club</select>
+    <select id="countMembers" resultType="int">SELECT COUNT(*) FROM member</select>
+    <select id="countActivities" resultType="int">SELECT COUNT(*) FROM activity</select>
+    <select id="sumFinanceIncome" resultType="java.math.BigDecimal">SELECT IFNULL(SUM(amount), 0) FROM finance_record WHERE type = 1</select>
+    <select id="sumFinanceExpense" resultType="java.math.BigDecimal">SELECT IFNULL(SUM(amount), 0) FROM finance_record WHERE type = 2</select>
+    <select id="recentActivities" resultMap="ActivityResultMap">
+        SELECT id, club_id, title, location, start_time, end_time, capacity, status, description, create_time
+        FROM activity
+        ORDER BY start_time DESC
+        LIMIT 5
+    </select>
+</mapper>

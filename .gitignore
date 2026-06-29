@@ -1,0 +1,13 @@
+target/
+*.class
+*.war
+*.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/shelf/
+node_modules/
+dist/
+.DS_Store
+*.log

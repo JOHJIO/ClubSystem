@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.club.mapper.MemberMapper">
+    <resultMap id="BaseResultMap" type="Member">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="student_no" property="studentNo"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="phone"/>
+        <result column="college" property="college"/>
+        <result column="major" property="major"/>
+        <result column="grade" property="grade"/>
+        <result column="club_id" property="clubId"/>
+        <result column="join_date" property="joinDate"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT id, name, student_no, gender, phone, college, major, grade, club_id, join_date, status FROM member
+        <where>
+            <if test="keyword != null and keyword != ''">
+                name LIKE CONCAT('%', #{keyword}, '%') OR student_no LIKE CONCAT('%', #{keyword}, '%') OR phone LIKE CONCAT('%', #{keyword}, '%') OR college LIKE CONCAT('%', #{keyword}, '%') OR major LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT id, name, student_no, gender, phone, college, major, grade, club_id, join_date, status FROM member WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO member (name, student_no, gender, phone, college, major, grade, club_id, join_date, status)
+        VALUES (#{name}, #{studentNo}, #{gender}, #{phone}, #{college}, #{major}, #{grade}, #{clubId}, #{joinDate}, #{status})
+    </insert>
+
+    <update id="update">
+        UPDATE member
+        <set>
+            name = #{name},
+            student_no = #{studentNo},
+            gender = #{gender},
+            phone = #{phone},
+            college = #{college},
+            major = #{major},
+            grade = #{grade},
+            club_id = #{clubId},
+            join_date = #{joinDate},
+            status = #{status},
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM member WHERE id = #{id}
+    </delete>
+</mapper>

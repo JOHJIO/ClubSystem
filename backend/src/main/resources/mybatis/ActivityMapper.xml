@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.club.mapper.ActivityMapper">
+    <resultMap id="BaseResultMap" type="Activity">
+        <id column="id" property="id"/>
+        <result column="club_id" property="clubId"/>
+        <result column="title" property="title"/>
+        <result column="location" property="location"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="capacity" property="capacity"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT id, club_id, title, location, start_time, end_time, capacity, status, description, create_time FROM activity
+        <where>
+            <if test="keyword != null and keyword != ''">
+                title LIKE CONCAT('%', #{keyword}, '%') OR location LIKE CONCAT('%', #{keyword}, '%') OR description LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT id, club_id, title, location, start_time, end_time, capacity, status, description, create_time FROM activity WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO activity (club_id, title, location, start_time, end_time, capacity, status, description)
+        VALUES (#{clubId}, #{title}, #{location}, #{startTime}, #{endTime}, #{capacity}, #{status}, #{description})
+    </insert>
+
+    <update id="update">
+        UPDATE activity
+        <set>
+            club_id = #{clubId},
+            title = #{title},
+            location = #{location},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            capacity = #{capacity},
+            status = #{status},
+            description = #{description},
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM activity WHERE id = #{id}
+    </delete>
+</mapper>
