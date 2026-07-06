@@ -462,13 +462,41 @@ function closeEditor() {
 
 async function saveRow() {
   const endpoint = currentModule.value.endpoint
-  const body = { ...editing.value }
+  const body = normalizeFormBody(editing.value)
   const method = body.id ? 'PUT' : 'POST'
   const path = body.id ? `/${endpoint}/${body.id}` : `/${endpoint}`
   await request(path, { method, body: JSON.stringify(body) })
   editing.value = null
   await loadList()
   if (activeKey.value !== 'dashboard') await loadDashboard()
+}
+
+function normalizeFormBody(source) {
+  const body = { ...source }
+  currentModule.value.fields.forEach((field) => {
+    const value = body[field.key]
+    if (value === '') {
+      body[field.key] = null
+      return
+    }
+    if (field.type === 'datetime-local' && value) {
+      body[field.key] = normalizeDateTime(value)
+      return
+    }
+    if (field.type === 'date' && value) {
+      body[field.key] = `${value} 00:00:00`
+      return
+    }
+    if (field.type === 'number' && value !== null && value !== undefined) {
+      body[field.key] = Number(value)
+    }
+  })
+  return body
+}
+
+function normalizeDateTime(value) {
+  const text = String(value).replace('T', ' ')
+  return text.length === 16 ? `${text}:00` : text
 }
 
 async function removeRow(row) {
